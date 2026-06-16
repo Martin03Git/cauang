@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#6366F1" />
+  <title>Cauang - Catetan Keuangan</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+        }
+      }
+    }
+  </script>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body class="bg-gray-50 font-sans antialiased">
+  <!-- App Shell -->
+  <div class="max-w-md mx-auto min-h-screen relative pb-20">
+    <!-- Header -->
+    <header class="px-4 pt-5 pb-3">
+      <h1 class="text-xl font-bold text-gray-800">Cauang</h1>
+      <p class="text-sm text-gray-500">Catetan Keuangan</p>
+    </header>
+
+    <!-- Main Content -->
+    <main id="app-content" class="px-4">
+      <!-- Dashboard renders here -->
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-gray-200 safe-area-bottom">
+      <div class="flex justify-around py-2">
+        <button class="nav-btn active flex flex-col items-center gap-0.5 px-3 py-1" data-view="dashboard">
+          <span class="text-xl">🏠</span>
+          <span class="text-[10px] font-medium text-indigo-600">Dashboard</span>
+        </button>
+        <button class="nav-btn flex flex-col items-center gap-0.5 px-3 py-1" data-view="add">
+          <span class="text-xl">➕</span>
+          <span class="text-[10px] font-medium text-gray-400">Catat</span>
+        </button>
+        <button class="nav-btn flex flex-col items-center gap-0.5 px-3 py-1" data-view="history">
+          <span class="text-xl">📋</span>
+          <span class="text-[10px] font-medium text-gray-400">Riwayat</span>
+        </button>
+        <button class="nav-btn flex flex-col items-center gap-0.5 px-3 py-1" data-view="insight">
+          <span class="text-xl">📈</span>
+          <span class="text-[10px] font-medium text-gray-400">Insight</span>
+        </button>
+        <button class="nav-btn flex flex-col items-center gap-0.5 px-3 py-1" data-view="settings">
+          <span class="text-xl">⚙️</span>
+          <span class="text-[10px] font-medium text-gray-400">Settings</span>
+        </button>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Scripts -->
+  <script src="src/utils/constants.js"></script>
+  <script src="src/utils/helpers.js"></script>
+  <script src="src/models/Storage.js"></script>
+  <script src="src/views/DashboardView.js"></script>
+  <script src="src/app.js"></script>
+</body>
+</html>
