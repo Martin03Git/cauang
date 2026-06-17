@@ -48,6 +48,26 @@ class Storage {
     return this.getTransactions().filter(filterFn);
   }
 
+  // ponytail: O(n) scan over all transactions, fine for MVP dataset
+  static suggestCategory(keyword) {
+    if (!keyword || keyword.length < 3) return null;
+    const kw = keyword.toLowerCase();
+    const txns = this.getTransactions();
+    const counts = {};
+
+    txns.forEach(t => {
+      if (t.description && t.description.toLowerCase().includes(kw)) {
+        counts[t.category] = (counts[t.category] || 0) + 1;
+      }
+    });
+
+    const entries = Object.entries(counts);
+    if (entries.length === 0) return null;
+
+    // return category with highest match count
+    return entries.sort((a, b) => b[1] - a[1])[0][0];
+  }
+
   // ponytail: seed for testing UI, remove before production
   static seedDemoData() {
     const today = new Date();

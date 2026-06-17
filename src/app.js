@@ -3,9 +3,12 @@
 (function () {
   let currentView = 'dashboard';
   let dashboardView;
+  let addExpenseView;
 
   function init() {
     dashboardView = new DashboardView('app-content');
+    addExpenseView = new AddExpenseView('app-content', () => navigate('dashboard'));
+
     navigate('dashboard');
 
     document.querySelectorAll('.nav-btn').forEach(btn => {
@@ -33,6 +36,9 @@
     switch (view) {
       case 'dashboard':
         dashboardView.render();
+        break;
+      case 'add':
+        addExpenseView.render();
         break;
       // ponytail: future views render placeholder until implemented
       default:

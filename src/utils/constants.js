@@ -2,8 +2,8 @@
 
 const CATEGORIES = [
   { id: 'makanan', label: 'Makanan', icon: 'shopping-bag' },
-  { id: 'minuman', label: 'Minuman/Kopi', icon: 'beaker' },
-  { id: 'transport', label: 'Transport/Ojol', icon: 'truck' },
+  { id: 'minuman', label: 'Minuman', icon: 'beaker' },
+  { id: 'transport', label: 'Transport', icon: 'truck' },
   { id: 'kos', label: 'Kos', icon: 'home' },
   { id: 'pulsa', label: 'Pulsa/Data', icon: 'device-phone-mobile' },
   { id: 'belanja', label: 'Belanja', icon: 'shopping-cart' },
