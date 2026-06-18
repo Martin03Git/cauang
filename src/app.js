@@ -6,12 +6,14 @@
   let addExpenseView;
   let historyView;
   let insightView;
+  let settingsView;
 
   function init() {
     dashboardView = new DashboardView('app-content');
     addExpenseView = new AddExpenseView('app-content', (view) => navigate(view));
     historyView = new HistoryView('app-content', (tx) => navigate('add', tx));
     insightView = new InsightView('app-content');
+    settingsView = new SettingsView('app-content');
 
     navigate('dashboard');
 
@@ -49,6 +51,9 @@
         break;
       case 'insight':
         insightView.render();
+        break;
+      case 'settings':
+        settingsView.render();
         break;
       // ponytail: future views render placeholder until implemented
       default:

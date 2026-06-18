@@ -81,6 +81,11 @@ class Storage {
     return entries.sort((a, b) => b[1] - a[1])[0][0];
   }
 
+  static resetAll() {
+    localStorage.removeItem(this.KEYS.TRANSACTIONS);
+    localStorage.removeItem(this.KEYS.BUDGET);
+  }
+
   // ponytail: seed for testing UI, remove before production
   static seedDemoData() {
     const today = new Date();

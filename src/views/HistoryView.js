@@ -189,8 +189,8 @@ class HistoryView {
         const tx = Storage.getTransactionById(id);
         if (!tx) return;
         showConfirmModal(
-          tx.description || CATEGORIES.find(c => c.id === tx.category)?.label || 'Transaksi',
-          formatCurrency(tx.amount),
+          'Hapus Transaksi',
+          { desc: tx.description || CATEGORIES.find(c => c.id === tx.category)?.label || 'Transaksi', amount: formatCurrency(tx.amount) },
           () => {
             Storage.deleteTransaction(id);
             this.renderList();
