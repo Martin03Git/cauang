@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content" />
   <meta name="theme-color" content="#6366F1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <title>Cauang - Catetan Keuangan</title>
@@ -20,6 +20,10 @@
     .nav-btn svg { transition: stroke .15s; }
     .dashboard-card { transition: box-shadow .2s; }
     .dashboard-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    html, body { position: fixed; width: 100%; height: 100%; overflow: hidden; }
+    #app-content { height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; }
   </style>
 </head>
 <body class="bg-gray-50 font-sans antialiased">
@@ -75,6 +79,7 @@
   <script src="src/models/Storage.js"></script>
   <script src="src/views/DashboardView.js"></script>
   <script src="src/views/AddExpenseView.js"></script>
+  <script src="src/views/HistoryView.js"></script>
   <script src="src/app.js"></script>
 </body>
 </html>

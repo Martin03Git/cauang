@@ -4,10 +4,12 @@
   let currentView = 'dashboard';
   let dashboardView;
   let addExpenseView;
+  let historyView;
 
   function init() {
     dashboardView = new DashboardView('app-content');
-    addExpenseView = new AddExpenseView('app-content', () => navigate('dashboard'));
+    addExpenseView = new AddExpenseView('app-content', (view) => navigate(view));
+    historyView = new HistoryView('app-content', (tx) => navigate('add', tx));
 
     navigate('dashboard');
 
@@ -16,7 +18,7 @@
     });
   }
 
-  function navigate(view) {
+  function navigate(view, data) {
     currentView = view;
 
     document.querySelectorAll('.nav-btn').forEach(btn => {
@@ -38,7 +40,10 @@
         dashboardView.render();
         break;
       case 'add':
-        addExpenseView.render();
+        addExpenseView.render(data);
+        break;
+      case 'history':
+        historyView.render();
         break;
       // ponytail: future views render placeholder until implemented
       default:

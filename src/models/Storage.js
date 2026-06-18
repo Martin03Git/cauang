@@ -27,6 +27,19 @@ class Storage {
     return tx;
   }
 
+  static getTransactionById(id) {
+    return this.getTransactions().find(t => t.id === id) || null;
+  }
+
+  static updateTransaction(id, updates) {
+    const all = this.getTransactions();
+    const idx = all.findIndex(t => t.id === id);
+    if (idx === -1) return null;
+    all[idx] = { ...all[idx], ...updates };
+    this.saveTransactions(all);
+    return all[idx];
+  }
+
   static deleteTransaction(id) {
     const all = this.getTransactions().filter(t => t.id !== id);
     this.saveTransactions(all);
