@@ -187,11 +187,15 @@ class HistoryView {
         e.stopPropagation();
         const id = btn.dataset.id;
         const tx = Storage.getTransactionById(id);
-        const label = tx ? formatCurrency(tx.amount) : 'ini';
-        showConfirmModal(`Hapus transaksi ${label}?`, () => {
-          Storage.deleteTransaction(id);
-          this.renderList();
-        });
+        if (!tx) return;
+        showConfirmModal(
+          tx.description || CATEGORIES.find(c => c.id === tx.category)?.label || 'Transaksi',
+          formatCurrency(tx.amount),
+          () => {
+            Storage.deleteTransaction(id);
+            this.renderList();
+          }
+        );
       });
     });
   }
