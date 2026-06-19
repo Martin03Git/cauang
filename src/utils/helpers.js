@@ -37,16 +37,6 @@ function formatDate(dateStr) {
   return `${d.getDate()} ${MONTH_NAMES[d.getMonth()]} ${d.getFullYear()}`;
 }
 
-function isToday(dateStr) {
-  const today = new Date();
-  const d = new Date(dateStr + 'T00:00:00');
-  return (
-    d.getDate() === today.getDate() &&
-    d.getMonth() === today.getMonth() &&
-    d.getFullYear() === today.getFullYear()
-  );
-}
-
 function isThisWeek(dateStr) {
   const today = new Date();
   const d = new Date(dateStr + 'T00:00:00');
