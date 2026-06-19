@@ -102,7 +102,7 @@ class HistoryView {
         document.getElementById('sampai-display').value = formatDateID(e.target.value);
       });
       // Fallback: click area → showPicker
-      document.querySelectorAll('.relative > input[type="date"]').forEach(el => {
+      modal.querySelectorAll('.relative > input[type="date"]').forEach(el => {
         el.addEventListener('click', () => el.showPicker());
       });
 
