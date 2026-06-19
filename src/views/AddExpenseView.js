@@ -88,7 +88,10 @@ class AddExpenseView {
     });
 
     // Amount → validate on input
-    document.getElementById('add-amount').addEventListener('input', () => this.validateForm());
+    document.getElementById('add-amount').addEventListener('input', (e) => {
+      e.target.value = e.target.value.replace(/[^0-9]/g, '');
+      this.validateForm();
+    });
 
     // Description → auto-kategori with debounce
     document.getElementById('add-desc').addEventListener('input', (e) => {
@@ -157,12 +160,12 @@ class AddExpenseView {
   }
 
   validateForm() {
-    const amount = parseInt(document.getElementById('add-amount').value, 10);
+    const amount = parseInt(document.getElementById('add-amount').value.replace(/[^0-9]/g, ''), 10);
     document.getElementById('add-save').disabled = !(amount > 0 && this.selectedCategory);
   }
 
   handleSave() {
-    const amount = parseInt(document.getElementById('add-amount').value, 10);
+    const amount = parseInt(document.getElementById('add-amount').value.replace(/[^0-9]/g, ''), 10);
     if (!amount || !this.selectedCategory) return;
 
     const data = {
