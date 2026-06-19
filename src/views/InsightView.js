@@ -17,19 +17,35 @@ class InsightView {
       <h2 class="text-lg font-bold text-gray-800 mb-4">Ringkasan & Insight</h2>
 
       <div class="mb-4">
-        <input id="insight-month" type="month" value="${this.selectedMonth}"
-          class="w-full px-4 py-2.5 bg-white rounded-xl text-sm text-gray-700 border border-gray-200 outline-none focus:border-indigo-400 transition-colors" />
+        <div class="relative cursor-pointer">
+          <input type="text" id="bulan-display" value="${this._formatMonthID(this.selectedMonth)}" readonly
+            class="w-full px-4 py-2.5 pr-10 bg-white rounded-xl text-sm text-gray-700 border border-gray-200 outline-none" />
+          <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/></svg>
+          <input id="insight-month" type="month" value="${this.selectedMonth}"
+            class="absolute inset-0 opacity-0 cursor-pointer" />
+        </div>
       </div>
 
       <div id="insight-content"></div>
     `;
 
+    // Month picker — sync display + render on change
     document.getElementById('insight-month').addEventListener('change', (e) => {
       this.selectedMonth = e.target.value;
+      document.getElementById('bulan-display').value = this._formatMonthID(e.target.value);
       this.renderContent();
+    });
+    // Fallback: tap area mana aja → open picker
+    document.getElementById('insight-month').addEventListener('click', (e) => {
+      e.target.showPicker();
     });
 
     this.renderContent();
+  }
+
+  _formatMonthID(val) {
+    const [y, m] = val.split('-');
+    return `${MONTH_NAMES[parseInt(m) - 1]} ${y}`;
   }
 
   renderContent() {
