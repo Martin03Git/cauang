@@ -1,4 +1,6 @@
 *.AppImage
 docs/
 AGENTS.md
+task/
+.tmp
 
