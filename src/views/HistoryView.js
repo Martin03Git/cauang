@@ -16,7 +16,7 @@ class HistoryView {
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-lg font-bold text-gray-800">Riwayat Transaksi</h2>
         <button id="date-range-btn" type="button" class="flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer shrink-0">
-          <span id="date-range-display">1 Jun – 18 Jun 2026</span>
+          <span id="date-range-display">${formatDateShort(this.dateStart)} – ${formatDateShort(this.dateEnd)} ${this.dateEnd.split('-')[0]}</span>
           <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m19 9-7 7-7-7"/></svg>
         </button>
       </div>
