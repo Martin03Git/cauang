@@ -15,7 +15,11 @@ class Storage {
   }
 
   static saveTransactions(transactions) {
-    localStorage.setItem(this.KEYS.TRANSACTIONS, JSON.stringify(transactions));
+    try {
+      localStorage.setItem(this.KEYS.TRANSACTIONS, JSON.stringify(transactions));
+    } catch (e) {
+      showAlertModal('Gagal Menyimpan', 'Data tidak bisa disimpan. Ruang penyimpanan penuh atau terjadi kesalahan.');
+    }
   }
 
   static addTransaction(tx) {
@@ -54,7 +58,11 @@ class Storage {
   }
 
   static saveBudget(budget) {
-    localStorage.setItem(this.KEYS.BUDGET, JSON.stringify(budget));
+    try {
+      localStorage.setItem(this.KEYS.BUDGET, JSON.stringify(budget));
+    } catch (e) {
+      showAlertModal('Gagal Menyimpan', 'Data budget tidak bisa disimpan. Ruang penyimpanan penuh atau terjadi kesalahan.');
+    }
   }
 
   // ponytail: O(n) scan over all transactions, fine for MVP dataset

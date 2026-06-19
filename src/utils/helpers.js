@@ -106,3 +106,23 @@ function showConfirmModal(title, message, onConfirm, confirmText = 'Hapus') {
     if (e.target === overlay) overlay.remove();
   });
 }
+
+function showAlertModal(title, message) {
+  const overlay = document.createElement('div');
+  overlay.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black/40';
+  overlay.innerHTML = `
+    <div class="bg-white rounded-2xl w-[300px] p-6 shadow-xl mx-4">
+      <div class="flex flex-col items-center text-center">
+        <div class="w-12 h-12 bg-yellow-50 rounded-full flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z"/></svg>
+        </div>
+        <h3 class="text-lg font-bold text-gray-800 mb-1">${title}</h3>
+        <p class="text-sm text-gray-500 mb-6">${message}</p>
+        <button id="alert-ok" class="w-full py-3 bg-indigo-500 text-white font-medium text-sm rounded-xl hover:bg-indigo-600 transition-colors cursor-pointer">OK</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  overlay.querySelector('#alert-ok').addEventListener('click', () => overlay.remove());
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+}
