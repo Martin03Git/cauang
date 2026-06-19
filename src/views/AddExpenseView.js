@@ -74,6 +74,7 @@ class AddExpenseView {
     `;
 
     this.attachEvents();
+    this.validateForm();
   }
 
   attachEvents() {
@@ -102,6 +103,7 @@ class AddExpenseView {
       });
     });
 
+    document.getElementById('add-date').addEventListener('change', () => this.validateForm());
     document.getElementById('add-save').addEventListener('click', () => this.handleSave());
   }
 
