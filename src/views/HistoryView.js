@@ -4,30 +4,21 @@ class HistoryView {
   constructor(containerId, onEdit) {
     this.container = document.getElementById(containerId);
     this.onEdit = onEdit;
-    this.activeFilter = 'all';
     this.searchQuery = '';
     this.selectedCategory = null;
-    this.selectedMonth = '';
+    const now = new Date();
+    this.dateStart = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-01`;
+    this.dateEnd = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
   }
 
   render() {
     this.container.innerHTML = `
-      <h2 class="text-lg font-bold text-gray-800 mb-4">Riwayat Transaksi</h2>
-
-      <!-- Filter Tabs -->
-      <div class="flex gap-1.5 mb-4 overflow-x-auto no-scrollbar">
-        ${['today', 'week', 'month', 'all'].map(f => `
-          <button class="filter-btn flex-1 py-2 px-3 rounded-xl text-sm font-medium transition-all cursor-pointer ${this.activeFilter === f ? 'bg-indigo-500 text-white shadow-sm' : 'bg-white text-gray-500 border border-gray-200 hover:bg-gray-50'}"
-                  data-filter="${f}">
-            ${f === 'today' ? 'Hari Ini' : f === 'week' ? 'Minggu Ini' : f === 'month' ? 'Bulan Ini' : 'Semua'}
-          </button>
-        `).join('')}
-      </div>
-
-      <!-- Bulan picker (overrides tab filter) -->
-      <div class="mb-4">
-        <input id="month-filter" type="month" value="${this.selectedMonth}"
-          class="w-full px-4 py-2.5 bg-white rounded-xl text-sm text-gray-700 border border-gray-200 outline-none focus:border-indigo-400 transition-colors" />
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-bold text-gray-800">Riwayat Transaksi</h2>
+        <button id="date-range-btn" type="button" class="flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer shrink-0">
+          <span id="date-range-display">1 Jun – 18 Jun 2026</span>
+          <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m19 9-7 7-7-7"/></svg>
+        </button>
       </div>
 
       <!-- Search -->
@@ -52,6 +43,7 @@ class HistoryView {
     `;
 
     this.attachEvents();
+    this._updateDateDisplay();
     this.renderList();
 
     // Restore chip scroll position after chip click
@@ -65,20 +57,68 @@ class HistoryView {
   }
 
   attachEvents() {
-    // Filter clicks
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        this.activeFilter = btn.dataset.filter;
-        this.selectedMonth = '';
-        this.render();
-      });
-    });
+    // Date range — tap button → custom modal
+    document.getElementById('date-range-btn').addEventListener('click', () => {
+      const modal = document.createElement('div');
+      modal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black/40';
+      modal.innerHTML = `
+        <div class="bg-white rounded-2xl w-[320px] p-6 shadow-xl mx-4">
+          <h3 class="text-lg font-bold text-gray-800 mb-5 text-center">Pilih Periode</h3>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-medium text-gray-500 mb-1.5">Dari</label>
+              <div class="relative cursor-pointer">
+                <input type="text" id="dari-display" value="${this._formatDateID(this.dateStart)}" readonly
+                  class="w-full px-4 py-2.5 pr-10 bg-white rounded-xl text-sm text-gray-700 border border-gray-200 outline-none" />
+                <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/></svg>
+                <input type="date" id="modal-date-start" value="${this.dateStart}"
+                  class="absolute inset-0 opacity-0 cursor-pointer" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-gray-500 mb-1.5">Sampai</label>
+              <div class="relative cursor-pointer">
+                <input type="text" id="sampai-display" value="${this._formatDateID(this.dateEnd)}" readonly
+                  class="w-full px-4 py-2.5 pr-10 bg-white rounded-xl text-sm text-gray-700 border border-gray-200 outline-none" />
+                <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/></svg>
+                <input type="date" id="modal-date-end" value="${this.dateEnd}"
+                  class="absolute inset-0 opacity-0 cursor-pointer" />
+              </div>
+            </div>
+          </div>
+          <div class="flex gap-3 mt-6">
+            <button id="modal-cancel" class="flex-1 py-3 bg-gray-100 text-gray-700 font-medium text-sm rounded-xl hover:bg-gray-200 transition-colors cursor-pointer">Batal</button>
+            <button id="modal-apply" class="flex-1 py-3 bg-indigo-500 text-white font-medium text-sm rounded-xl hover:bg-indigo-600 transition-colors cursor-pointer">Terapkan</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
 
-    // Month picker
-    document.getElementById('month-filter').addEventListener('change', (e) => {
-      this.selectedMonth = e.target.value;
-      this.activeFilter = 'all';
-      this.render();
+      // Sync display text on date pick
+      document.getElementById('modal-date-start').addEventListener('change', (e) => {
+        document.getElementById('dari-display').value = this._formatDateID(e.target.value);
+      });
+      document.getElementById('modal-date-end').addEventListener('change', (e) => {
+        document.getElementById('sampai-display').value = this._formatDateID(e.target.value);
+      });
+      // Fallback: click area → showPicker
+      document.querySelectorAll('.relative > input[type="date"]').forEach(el => {
+        el.addEventListener('click', () => el.showPicker());
+      });
+
+      modal.querySelector('#modal-cancel').addEventListener('click', () => modal.remove());
+      modal.querySelector('#modal-apply').addEventListener('click', () => {
+        const start = document.getElementById('modal-date-start').value;
+        const end = document.getElementById('modal-date-end').value;
+        if (!start || !end) return;
+        if (end < start) return;
+        this.dateStart = start;
+        this.dateEnd = end;
+        this._updateDateDisplay();
+        this.renderList();
+        modal.remove();
+      });
+      modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
     });
 
     // Chip clicks
@@ -200,19 +240,32 @@ class HistoryView {
     });
   }
 
+  // ── helpers ──────────────────────────────────────
+
+  _formatDateShort(dateStr) {
+    const d = new Date(dateStr + 'T00:00:00');
+    return `${d.getDate()} ${MONTH_NAMES[d.getMonth()].slice(0, 3)}`;
+  }
+
+  _formatDateID(dateStr) {
+    const [y, m, d] = dateStr.split('-');
+    return `${d}/${m}/${y}`;
+  }
+
+  _updateDateDisplay() {
+    const el = document.getElementById('date-range-display');
+    if (!el) return;
+    const start = this._formatDateShort(this.dateStart);
+    const end = this._formatDateShort(this.dateEnd);
+    const year = this.dateEnd.split('-')[0];
+    el.textContent = `${start} – ${end} ${year}`;
+  }
+
   getFilteredTransactions() {
     let txns = Storage.getTransactions();
 
-    // Month filter overrides tab filter
-    if (this.selectedMonth) {
-      txns = txns.filter(t => t.date.startsWith(this.selectedMonth));
-    } else {
-      switch (this.activeFilter) {
-        case 'today': txns = txns.filter(t => isToday(t.date)); break;
-        case 'week':  txns = txns.filter(t => isThisWeek(t.date)); break;
-        case 'month': txns = txns.filter(t => isThisMonth(t.date)); break;
-      }
-    }
+    // Date range filter (default: tgl 1 – hari ini)
+    txns = txns.filter(t => t.date >= this.dateStart && t.date <= this.dateEnd);
 
     // Category filter
     if (this.selectedCategory) {
