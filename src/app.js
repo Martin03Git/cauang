@@ -25,7 +25,8 @@
   function navigate(view, data) {
     currentView = view;
 
-    document.querySelectorAll('.nav-btn').forEach(btn => {
+    // Skip catat button — always indigo, no active state toggle
+    document.querySelectorAll('.nav-btn:not([data-view="add"])').forEach(btn => {
       const isActive = btn.dataset.view === view;
       const svg = btn.querySelector('svg');
       const label = btn.querySelector('span:last-child');
