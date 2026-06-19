@@ -37,7 +37,7 @@ class SettingsView {
           </span>
           <div>
             <p class="text-sm font-medium text-gray-700">Dukung Developer</p>
-            <p class="text-xs text-gray-500 mt-0.5 mb-3">Biar semangat bikin app gratis buat anak kos!</p>
+            <p class="text-xs text-gray-500 mt-0.5 mb-3">Biar semangat bikin app gratis lainnya!</p>
             <a href="https://trakteer.id/martin.dev" target="_blank" rel="noopener"
               class="inline-flex items-center gap-1.5 px-4 py-2 bg-red-500 text-white text-xs font-semibold rounded-xl hover:bg-red-600 transition-colors">
               <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/></svg>
@@ -45,6 +45,19 @@ class SettingsView {
             </a>
           </div>
         </div>
+      </div>
+
+      <!-- Export -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mb-4">
+        <div class="flex items-center gap-2 mb-3">
+          <svg class="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+          <p class="text-sm font-medium text-gray-500">Ekspor Data</p>
+        </div>
+        <p class="text-xs text-gray-400 mb-4">Download semua transaksi ke file CSV (bisa dibuka di Excel).</p>
+        <button id="settings-export"
+          class="w-full py-3 bg-emerald-500 text-white font-semibold text-sm rounded-xl hover:bg-emerald-600 transition-colors cursor-pointer active:scale-[0.98]">
+          Ekspor CSV
+        </button>
       </div>
 
       <!-- Reset -->
@@ -79,6 +92,17 @@ class SettingsView {
       msg.textContent = 'Budget berhasil disimpan!';
       msg.classList.remove('hidden');
       setTimeout(() => msg.classList.add('hidden'), 2500);
+    });
+
+    document.getElementById('settings-export').addEventListener('click', () => {
+      const txns = Storage.getTransactions();
+      if (txns.length === 0) {
+        const btn = document.getElementById('settings-export');
+        btn.textContent = 'Tidak ada data';
+        setTimeout(() => { btn.textContent = 'Ekspor CSV'; }, 2000);
+        return;
+      }
+      exportToCSV(txns);
     });
 
     document.getElementById('settings-reset').addEventListener('click', () => {

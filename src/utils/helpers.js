@@ -1,5 +1,27 @@
 // Cauang — helpers
 
+function exportToCSV(transactions) {
+  const BOM = '\uFEFF';
+  const sep = ';';
+  const catLabel = (id) => CATEGORIES.find(c => c.id === id)?.label || id;
+  const esc = (v) => `"${String(v).replace(/"/g, '""')}"`;
+
+  const header = ['Tanggal', 'Deskripsi', 'Kategori', 'Jumlah'].join(sep);
+  const rows = transactions.map(t =>
+    [formatDate(t.date), esc(t.description || ''), catLabel(t.category), t.amount].join(sep)
+  ).join('\n');
+
+  const blob = new Blob([BOM + header + '\n' + rows], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `cauang-${getTodayStr()}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 function formatCurrency(amount) {
   return new Intl.NumberFormat('id-ID', {
     style: 'currency',
