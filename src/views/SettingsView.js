@@ -3,6 +3,9 @@
 class SettingsView {
   constructor(containerId) {
     this.container = document.getElementById(containerId);
+    const now = new Date();
+    this.dateStart = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-01`;
+    this.dateEnd = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
   }
 
   render() {
@@ -53,10 +56,10 @@ class SettingsView {
           <svg class="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
           <p class="text-sm font-medium text-gray-500">Ekspor Data</p>
         </div>
-        <p class="text-xs text-gray-400 mb-4">Download semua transaksi ke file CSV (bisa dibuka di Excel).</p>
-        <button id="settings-export"
-          class="w-full py-3 bg-emerald-500 text-white font-semibold text-sm rounded-xl hover:bg-emerald-600 transition-colors cursor-pointer active:scale-[0.98]">
-          Ekspor CSV
+        <p class="text-xs text-gray-400 mb-4">Pilih periode transaksi untuk diekspor ke CSV.</p>
+        <button id="export-trigger" type="button" class="w-full flex items-center justify-between px-4 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer">
+          <span id="export-range-display">${this._formatDateShort(this.dateStart)} – ${this._formatDateShort(this.dateEnd)} ${this.dateEnd.split('-')[0]}</span>
+          <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m19 9-7 7-7-7"/></svg>
         </button>
       </div>
 
@@ -94,16 +97,7 @@ class SettingsView {
       setTimeout(() => msg.classList.add('hidden'), 2500);
     });
 
-    document.getElementById('settings-export').addEventListener('click', () => {
-      const txns = Storage.getTransactions();
-      if (txns.length === 0) {
-        const btn = document.getElementById('settings-export');
-        btn.textContent = 'Tidak ada data';
-        setTimeout(() => { btn.textContent = 'Ekspor CSV'; }, 2000);
-        return;
-      }
-      exportToCSV(txns);
-    });
+    document.getElementById('export-trigger').addEventListener('click', () => this._openExportModal());
 
     document.getElementById('settings-reset').addEventListener('click', () => {
       showConfirmModal(
@@ -116,5 +110,91 @@ class SettingsView {
         'Hapus Semua'
       );
     });
+  }
+
+  // ── export modal ────────────────────────────────
+
+  _openExportModal() {
+    const txns = Storage.getTransactions();
+    if (txns.length === 0) {
+      const btn = document.getElementById('export-trigger');
+      const span = btn.querySelector('span');
+      const orig = span.textContent;
+      span.textContent = 'Tidak ada data';
+      setTimeout(() => { span.textContent = orig; }, 2000);
+      return;
+    }
+
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black/40';
+    modal.innerHTML = `
+      <div class="bg-white rounded-2xl w-[320px] p-6 shadow-xl mx-4">
+        <h3 class="text-lg font-bold text-gray-800 mb-5 text-center">Ekspor CSV</h3>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-medium text-gray-500 mb-1.5">Dari</label>
+            <div class="relative cursor-pointer">
+              <input type="text" id="export-dari-display" value="${this._formatDateID(this.dateStart)}" readonly
+                class="w-full px-4 py-2.5 pr-10 bg-white rounded-xl text-sm text-gray-700 border border-gray-200 outline-none" />
+              <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/></svg>
+              <input type="date" id="export-date-start" value="${this.dateStart}"
+                class="absolute inset-0 opacity-0 cursor-pointer" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-500 mb-1.5">Sampai</label>
+            <div class="relative cursor-pointer">
+              <input type="text" id="export-sampai-display" value="${this._formatDateID(this.dateEnd)}" readonly
+                class="w-full px-4 py-2.5 pr-10 bg-white rounded-xl text-sm text-gray-700 border border-gray-200 outline-none" />
+              <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/></svg>
+              <input type="date" id="export-date-end" value="${this.dateEnd}"
+                class="absolute inset-0 opacity-0 cursor-pointer" />
+            </div>
+          </div>
+        </div>
+        <div class="flex gap-3 mt-6">
+          <button id="export-modal-cancel" class="flex-1 py-3 bg-gray-100 text-gray-700 font-medium text-sm rounded-xl hover:bg-gray-200 transition-colors cursor-pointer">Batal</button>
+          <button id="export-modal-exec" class="flex-1 py-3 bg-indigo-500 text-white font-medium text-sm rounded-xl hover:bg-indigo-600 transition-colors cursor-pointer">Ekspor</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    document.getElementById('export-date-start').addEventListener('change', (e) => {
+      document.getElementById('export-dari-display').value = this._formatDateID(e.target.value);
+    });
+    document.getElementById('export-date-end').addEventListener('change', (e) => {
+      document.getElementById('export-sampai-display').value = this._formatDateID(e.target.value);
+    });
+    document.querySelectorAll('#export-date-start, #export-date-end').forEach(el => {
+      el.addEventListener('click', () => el.showPicker());
+    });
+
+    modal.querySelector('#export-modal-cancel').addEventListener('click', () => modal.remove());
+    modal.querySelector('#export-modal-exec').addEventListener('click', () => {
+      const start = document.getElementById('export-date-start').value;
+      const end = document.getElementById('export-date-end').value;
+      if (!start || !end) return;
+      if (end < start) return;
+      this.dateStart = start;
+      this.dateEnd = end;
+      const filtered = Storage.getTransactions().filter(t => t.date >= start && t.date <= end);
+      if (filtered.length === 0) return;
+      exportToCSV(filtered);
+      modal.remove();
+    });
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+  }
+
+  // ── helpers ──────────────────────────────────────
+
+  _formatDateID(dateStr) {
+    const [y, m, d] = dateStr.split('-');
+    return `${d}/${m}/${y}`;
+  }
+
+  _formatDateShort(dateStr) {
+    const d = new Date(dateStr + 'T00:00:00');
+    return `${d.getDate()} ${MONTH_NAMES[d.getMonth()].slice(0, 3)}`;
   }
 }
