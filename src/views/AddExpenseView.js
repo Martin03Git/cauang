@@ -60,7 +60,7 @@ class AddExpenseView {
       <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mb-6">
         <p class="text-sm font-medium text-gray-500 mb-2">Tanggal</p>
         <div class="relative cursor-pointer">
-          <input type="text" id="add-date-display" value="${this._formatDateID(editTx ? editTx.date : getTodayStr())}" readonly
+          <input type="text" id="add-date-display" value="${formatDateID(editTx ? editTx.date : getTodayStr())}" readonly
             class="w-full px-4 py-2.5 pr-10 bg-white rounded-xl text-sm text-gray-700 border border-gray-200 outline-none" />
           <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/></svg>
           <input type="date" id="add-date" value="${editTx ? editTx.date : getTodayStr()}"
@@ -110,7 +110,7 @@ class AddExpenseView {
 
     // Date picker — sync display + validate
     document.getElementById('add-date').addEventListener('change', (e) => {
-      document.getElementById('add-date-display').value = this._formatDateID(e.target.value);
+      document.getElementById('add-date-display').value = formatDateID(e.target.value);
       this.validateForm();
     });
     document.getElementById('add-date').addEventListener('click', (e) => e.target.showPicker());
@@ -181,10 +181,4 @@ class AddExpenseView {
     this.onSave && this.onSave(this.editTx ? 'history' : 'dashboard');
   }
 
-  // ── helpers ──────────────────────────────────────
-
-  _formatDateID(dateStr) {
-    const [y, m, d] = dateStr.split('-');
-    return `${d}/${m}/${y}`;
-  }
 }

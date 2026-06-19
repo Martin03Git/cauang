@@ -58,7 +58,7 @@ class SettingsView {
         </div>
         <p class="text-xs text-gray-400 mb-4">Pilih periode transaksi untuk diekspor ke CSV.</p>
         <button id="export-trigger" type="button" class="w-full flex items-center justify-between px-4 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer">
-          <span id="export-range-display">${this._formatDateShort(this.dateStart)} – ${this._formatDateShort(this.dateEnd)} ${this.dateEnd.split('-')[0]}</span>
+          <span id="export-range-display">${formatDateShort(this.dateStart)} – ${formatDateShort(this.dateEnd)} ${this.dateEnd.split('-')[0]}</span>
           <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m19 9-7 7-7-7"/></svg>
         </button>
       </div>
@@ -134,7 +134,7 @@ class SettingsView {
           <div>
             <label class="block text-xs font-medium text-gray-500 mb-1.5">Dari</label>
             <div class="relative cursor-pointer">
-              <input type="text" id="export-dari-display" value="${this._formatDateID(this.dateStart)}" readonly
+              <input type="text" id="export-dari-display" value="${formatDateID(this.dateStart)}" readonly
                 class="w-full px-4 py-2.5 pr-10 bg-white rounded-xl text-sm text-gray-700 border border-gray-200 outline-none" />
               <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/></svg>
               <input type="date" id="export-date-start" value="${this.dateStart}"
@@ -144,7 +144,7 @@ class SettingsView {
           <div>
             <label class="block text-xs font-medium text-gray-500 mb-1.5">Sampai</label>
             <div class="relative cursor-pointer">
-              <input type="text" id="export-sampai-display" value="${this._formatDateID(this.dateEnd)}" readonly
+              <input type="text" id="export-sampai-display" value="${formatDateID(this.dateEnd)}" readonly
                 class="w-full px-4 py-2.5 pr-10 bg-white rounded-xl text-sm text-gray-700 border border-gray-200 outline-none" />
               <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/></svg>
               <input type="date" id="export-date-end" value="${this.dateEnd}"
@@ -161,10 +161,10 @@ class SettingsView {
     document.body.appendChild(modal);
 
     document.getElementById('export-date-start').addEventListener('change', (e) => {
-      document.getElementById('export-dari-display').value = this._formatDateID(e.target.value);
+      document.getElementById('export-dari-display').value = formatDateID(e.target.value);
     });
     document.getElementById('export-date-end').addEventListener('change', (e) => {
-      document.getElementById('export-sampai-display').value = this._formatDateID(e.target.value);
+      document.getElementById('export-sampai-display').value = formatDateID(e.target.value);
     });
     document.querySelectorAll('#export-date-start, #export-date-end').forEach(el => {
       el.addEventListener('click', () => el.showPicker());
@@ -186,15 +186,4 @@ class SettingsView {
     modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
   }
 
-  // ── helpers ──────────────────────────────────────
-
-  _formatDateID(dateStr) {
-    const [y, m, d] = dateStr.split('-');
-    return `${d}/${m}/${y}`;
-  }
-
-  _formatDateShort(dateStr) {
-    const d = new Date(dateStr + 'T00:00:00');
-    return `${d.getDate()} ${MONTH_NAMES[d.getMonth()].slice(0, 3)}`;
-  }
 }

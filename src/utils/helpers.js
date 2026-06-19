@@ -63,6 +63,16 @@ function getTodayStr() {
   return `${y}-${m}-${day}`;
 }
 
+function formatDateID(dateStr) {
+  const [y, m, d] = dateStr.split('-');
+  return `${d}/${m}/${y}`;
+}
+
+function formatDateShort(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  return `${d.getDate()} ${MONTH_NAMES[d.getMonth()].slice(0, 3)}`;
+}
+
 function showConfirmModal(title, message, onConfirm, confirmText = 'Hapus') {
   const overlay = document.createElement('div');
   overlay.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black/40';
