@@ -1,6 +1,7 @@
 // Cauang — helpers
 
 function exportToCSV(transactions) {
+  transactions = [...transactions].sort((a, b) => a.date.localeCompare(b.date));
   const BOM = '\uFEFF';
   const sep = ';';
   const catLabel = (id) => CATEGORIES.find(c => c.id === id)?.label || id;
