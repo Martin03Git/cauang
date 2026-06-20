@@ -140,7 +140,7 @@ class InsightView {
                   <div class="h-2 rounded-full" style="width:${Math.max(pct, 3)}%;background-color:${CATEGORY_COLORS[id] || '#6B7280'}"></div>
                 </div>
               </div>
-              <span class="text-sm font-bold text-gray-800 shrink-0">${formatCurrency(amt)}</span>
+              <span class="text-sm font-bold text-gray-800 shrink-0">${formatCompactCurrency(amt)}</span>
             </div>
           `;
         }).join('')}
@@ -185,7 +185,7 @@ class InsightView {
               label: (ctx) => {
                 const val = ctx.parsed;
                 const pct = Math.round((val / total) * 100);
-                return ` ${ctx.label}: ${formatCurrency(val)} (${pct}%)`;
+                return ` ${ctx.label}: ${formatCompactCurrency(val)} (${pct}%)`;
               }
             }
           }

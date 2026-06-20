@@ -178,7 +178,7 @@ class HistoryView {
         <div class="mb-4">
           <div class="flex items-center justify-between mb-2">
             <p class="text-xs font-semibold text-gray-500">${formatDate(date)}</p>
-            <p class="text-xs font-medium text-gray-400">${formatCurrency(dayTotal)}</p>
+            <p class="text-xs font-medium text-gray-400">${formatCompactCurrency(dayTotal)}</p>
           </div>
           <div class="bg-white rounded-2xl shadow-sm border border-gray-100 divide-y divide-gray-50">
             ${groups[date].map(t => this.renderTransactionItem(t)).join('')}

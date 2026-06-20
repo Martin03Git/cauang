@@ -88,14 +88,14 @@ class DashboardView {
             <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
             <p class="text-sm text-gray-500 font-medium">Hari Ini</p>
           </div>
-          <p class="text-xl font-bold text-gray-800">${formatCurrency(s.todayTotal)}</p>
+          <p class="text-xl font-bold text-gray-800">${formatCompactCurrency(s.todayTotal)}</p>
         </div>
         <div class="dashboard-card bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
           <div class="flex items-center gap-2 mb-2">
             <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/></svg>
             <p class="text-sm text-gray-500 font-medium">Minggu Ini</p>
           </div>
-          <p class="text-xl font-bold text-gray-800">${formatCurrency(s.weekTotal)}</p>
+          <p class="text-xl font-bold text-gray-800">${formatCompactCurrency(s.weekTotal)}</p>
         </div>
       </div>
 
@@ -112,7 +112,7 @@ class DashboardView {
               <span class="w-9 h-9 bg-gray-50 rounded-xl flex items-center justify-center">${CATEGORY_SVGS[cat.icon]}</span>
               <span class="text-sm font-medium text-gray-700">${cat.label}</span>
             </div>
-            <span class="text-sm font-bold text-gray-800">${formatCurrency(cat.total)}</span>
+            <span class="text-sm font-bold text-gray-800">${formatCompactCurrency(cat.total)}</span>
           </div>
         `).join('')}
       </div>
