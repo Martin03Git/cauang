@@ -22,7 +22,7 @@ A simple, offline-first expense tracker built with vanilla JavaScript. No build 
 ## Getting Started
 
 ```bash
-git clone https://github.com/yourusername/cauang.git
+git clone https://github.com/Martin03Git/cauang.git
 cd cauang
 open index.html
 ```
@@ -54,4 +54,4 @@ npx serve .
 
 ## Deploy
 
-Deployment link will be added here once live.
+click [here](https://cauang.vercel.app/) to try the app.
