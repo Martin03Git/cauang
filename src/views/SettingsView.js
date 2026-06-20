@@ -20,10 +20,10 @@ class SettingsView {
           <svg class="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
           <p class="text-sm font-medium text-gray-500">Budget Bulanan</p>
         </div>
-        <div class="flex items-center border-b-2 border-indigo-500 pb-2 mb-4">
-          <span class="text-sm font-semibold text-gray-400 mr-1">Rp</span>
-          <input id="settings-budget" type="text" inputmode="numeric" pattern="[0-9]*" value="${budget.amount || ''}" placeholder="0"
-            class="flex-1 text-xl font-bold text-gray-800 outline-none border-none bg-transparent" />
+        <div class="flex items-center border-b-2 border-indigo-500 pb-2 mb-4 overflow-hidden">
+          <span class="text-sm font-semibold text-gray-400 mr-1 shrink-0">Rp</span>
+          <input id="settings-budget" type="text" inputmode="numeric" pattern="[0-9]*" value="${budget.amount ? budget.amount.toLocaleString('id-ID') : ''}" placeholder="0"
+            class="min-w-0 flex-1 text-xl font-bold text-gray-800 outline-none border-none bg-transparent" />
         </div>
         <button id="settings-save-budget"
           class="w-full py-3 bg-indigo-500 text-white font-semibold text-sm rounded-xl hover:bg-indigo-600 transition-colors cursor-pointer active:scale-[0.98]">
@@ -81,6 +81,11 @@ class SettingsView {
   }
 
   attachEvents() {
+    // Format budget input on the fly
+    document.getElementById('settings-budget').addEventListener('input', (e) => {
+      e.target.value = formatAmountInput(e.target.value);
+    });
+
     document.getElementById('settings-save-budget').addEventListener('click', () => {
       const amount = parseInt(document.getElementById('settings-budget').value.replace(/[^0-9]/g, ''), 10);
       const msg = document.getElementById('settings-budget-msg');
@@ -167,7 +172,7 @@ class SettingsView {
       document.getElementById('export-sampai-display').value = formatDateID(e.target.value);
     });
     document.querySelectorAll('#export-date-start, #export-date-end').forEach(el => {
-      el.addEventListener('click', () => el.showPicker());
+      el.parentElement.addEventListener('click', () => el.showPicker());
     });
 
     modal.querySelector('#export-modal-cancel').addEventListener('click', () => modal.remove());

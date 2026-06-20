@@ -15,7 +15,7 @@
     insightView = new InsightView('app-content');
     settingsView = new SettingsView('app-content');
 
-    navigate('dashboard');
+    navigate(localStorage.getItem('lastView') || 'dashboard');
 
     document.querySelectorAll('.nav-btn').forEach(btn => {
       btn.addEventListener('click', () => navigate(btn.dataset.view));
@@ -24,6 +24,10 @@
 
   function navigate(view, data) {
     currentView = view;
+    // Persist last view (skip 'add' — transient)
+    if (view !== 'add') {
+      localStorage.setItem('lastView', view);
+    }
 
     // Skip catat button — always indigo, no active state toggle
     document.querySelectorAll('.nav-btn:not([data-view="add"])').forEach(btn => {

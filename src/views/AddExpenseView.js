@@ -25,10 +25,10 @@ class AddExpenseView {
       <!-- 1. Nominal -->
       <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mb-4">
         <p class="text-sm font-medium text-gray-500 mb-2">Nominal</p>
-        <div class="flex items-center border-b-2 border-indigo-500 pb-2">
-          <span class="text-lg font-semibold text-gray-400 mr-1">Rp</span>
-          <input id="add-amount" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="0" value="${editTx ? editTx.amount : ''}"
-            class="flex-1 text-3xl font-bold text-gray-800 outline-none border-none bg-transparent" />
+        <div class="flex items-center border-b-2 border-indigo-500 pb-2 overflow-hidden">
+          <span class="text-lg font-semibold text-gray-400 mr-1 shrink-0">Rp</span>
+          <input id="add-amount" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="0" value="${editTx ? editTx.amount.toLocaleString('id-ID') : ''}"
+            class="min-w-0 flex-1 text-3xl font-bold text-gray-800 outline-none border-none bg-transparent" />
         </div>
       </div>
 
@@ -89,7 +89,7 @@ class AddExpenseView {
 
     // Amount → validate on input
     document.getElementById('add-amount').addEventListener('input', (e) => {
-      e.target.value = e.target.value.replace(/[^0-9]/g, '');
+      e.target.value = formatAmountInput(e.target.value);
       this.validateForm();
     });
 
@@ -116,7 +116,9 @@ class AddExpenseView {
       document.getElementById('add-date-display').value = formatDateID(e.target.value);
       this.validateForm();
     });
-    document.getElementById('add-date').addEventListener('click', (e) => e.target.showPicker());
+    document.getElementById('add-date').parentElement.addEventListener('click', () => {
+      document.getElementById('add-date').showPicker();
+    });
 
     document.getElementById('add-save').addEventListener('click', () => this.handleSave());
   }

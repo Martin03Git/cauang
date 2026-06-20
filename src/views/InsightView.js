@@ -36,8 +36,8 @@ class InsightView {
       this.renderContent();
     });
     // Fallback: tap area mana aja → open picker
-    document.getElementById('insight-month').addEventListener('click', (e) => {
-      e.target.showPicker();
+    document.getElementById('insight-month').parentElement.addEventListener('click', () => {
+      document.getElementById('insight-month').showPicker();
     });
 
     this.renderContent();
@@ -88,7 +88,7 @@ class InsightView {
       <!-- Total Card -->
       <div class="dashboard-card bg-gradient-to-br from-indigo-500 via-indigo-600 to-purple-700 rounded-2xl p-5 text-white mb-4 shadow-md">
         <p class="text-xs font-medium text-indigo-200 uppercase tracking-wide">Total Pengeluaran</p>
-        <p class="text-3xl font-bold mt-1 tracking-tight">${formatCurrency(total)}</p>
+        <p class="text-3xl font-bold mt-1 tracking-tight">${formatCompactCurrency(total)}</p>
         <p class="text-sm text-indigo-200 mt-1">Rata-rata ${formatCurrency(avg)}/hari</p>
       </div>
 

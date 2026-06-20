@@ -107,6 +107,27 @@ function showConfirmModal(title, message, onConfirm, confirmText = 'Hapus') {
   });
 }
 
+// Strip existing format, limit digits, return number string with thousand separators
+function formatAmountInput(val) {
+  const raw = String(val).replace(/\./g, '').replace(/[^0-9]/g, '').slice(0, 13);
+  if (raw === '') return '';
+  return parseInt(raw, 10).toLocaleString('id-ID');
+}
+
+// Compact format: 1.200.000 → Rp1,2 jt, 500.000 → Rp500 rb, 999 → Rp999
+function formatCompactCurrency(amount) {
+  if (amount >= 1_000_000_000) {
+    return `Rp${(amount / 1_000_000_000).toLocaleString('id-ID', { maximumFractionDigits: 2 })} M`;
+  }
+  if (amount >= 1_000_000) {
+    return `Rp${(amount / 1_000_000).toLocaleString('id-ID', { maximumFractionDigits: 2 })} jt`;
+  }
+  if (amount >= 1_000) {
+    return `Rp${(amount / 1_000).toLocaleString('id-ID', { maximumFractionDigits: 1 })} rb`;
+  }
+  return formatCurrency(amount);
+}
+
 function showAlertModal(title, message) {
   const overlay = document.createElement('div');
   overlay.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black/40';

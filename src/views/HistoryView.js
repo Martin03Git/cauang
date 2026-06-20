@@ -103,7 +103,7 @@ class HistoryView {
       });
       // Fallback: click area → showPicker
       modal.querySelectorAll('.relative > input[type="date"]').forEach(el => {
-        el.addEventListener('click', () => el.showPicker());
+        el.parentElement.addEventListener('click', () => el.showPicker());
       });
 
       modal.querySelector('#modal-cancel').addEventListener('click', () => modal.remove());
@@ -168,7 +168,7 @@ class HistoryView {
     let html = `
       <div class="flex items-center justify-between mb-3">
         <p class="text-xs text-gray-400 font-medium">${transactions.length} transaksi</p>
-        <p class="text-sm font-bold text-gray-800">${formatCurrency(total)}</p>
+        <p class="text-sm font-bold text-gray-800">${formatCompactCurrency(total)}</p>
       </div>
     `;
 
