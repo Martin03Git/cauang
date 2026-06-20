@@ -1,6 +1,4 @@
-// Cauang — Service Worker
-
-const CACHE = 'cauang-v1';
+const CACHE = 'cauang-v2';
 const URLS = [
   '/',
   '/index.html',
@@ -27,6 +25,11 @@ self.addEventListener('install', e => {
 });
 
 self.addEventListener('activate', e => {
+  e.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
+    )
+  );
   e.waitUntil(clients.claim());
 });
 
